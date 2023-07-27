@@ -1,25 +1,25 @@
 package com.company.strategy;
 
-public class Sorter {
+public class Sorter<T> {
 
-    //接口作为参数，是说给这个方法传参数的时候，可以把继承了这个接口的类的实例传给这个方法
-    public static void sort(Comparable[] arr){
+    //sort方法里只需要把传入的参数以及方法的地方变一下即可
+    public void sort(T[] arr,Comparator<T> comparator){
         for (int i = 0; i < arr.length-1; i++) {
             int minPos = i;
             for (int j = i+1; j < arr.length; j++) {
-                minPos = arr[j].compareTo(arr[minPos]) == -1 ? j : minPos;
+                minPos = comparator.compare(arr[j],arr[minPos]) == -1 ? j : minPos;
             }
             swap(arr,i,minPos);
         }
     }
 
-    static void swap(Comparable[] arr, int i, int j) {
-        Comparable temp = arr[i];
+    void swap(T[] arr, int i, int j) {
+        T temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
     }
 
-    private static void print(Comparable[] arr) {
+    private void print(T[] arr) {
         for (int i = 0; i < arr.length; i++) {
             System.out.println(arr[i]);
         }
