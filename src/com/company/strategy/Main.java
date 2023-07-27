@@ -4,11 +4,11 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        int[] a = {9,2,3,5,7,1,4};
+        Cat[] a = {new Cat(3,3),new Cat(5,5),new Cat(1,1)};
         Sorter sorter = new Sorter();
         sorter.sort(a);
         System.out.println(Arrays.toString(a));
-        //[1, 2, 3, 4, 5, 7, 9]
+        //[Cat{weight=1, height=1}, Cat{weight=3, height=3}, Cat{weight=5, height=5}]
     }
 
 }
