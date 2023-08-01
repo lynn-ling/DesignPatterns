@@ -2,12 +2,7 @@ package com.company.factorymethod;
 
 public class Main {
     public static void main(String[] args) {
-        Moveable n = new Car();
+        Moveable n = new CarFactory().createCar();
         n.go();
-        Moveable m = new Plane();
-        m.go();
-        Moveable l = new Broom();
-        l.go();
-
     }
 }
