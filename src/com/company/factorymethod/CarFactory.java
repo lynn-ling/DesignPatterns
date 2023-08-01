@@ -6,7 +6,7 @@ package com.company.factorymethod;
 这里创建了生产Car的工厂，还可以按需添加生产Plane，Broom等等的工厂
  */
 public class CarFactory {
-    public Car createCar(){
+    public Moveable createCar(){
         System.out.println("a car created!");
         return new Car();
     }
