@@ -1,7 +1,7 @@
 package com.company.abstractfactory;
 
-public class Bread extends Food{
+public class MushRoom extends Food{
     public void printName(){
-        System.out.println("wdm");
+        System.out.println("dmg");
     }
 }
