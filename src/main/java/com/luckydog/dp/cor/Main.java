@@ -8,13 +8,10 @@ public class Main {
         Msg msg = new Msg();
         msg.setMsg("大家好:)，<script>,欢迎访问 mashibing.com，大家都是996");
 
-        List<Filter> filters = new ArrayList<>();
-        filters.add(new HTMLFilter());
-        filters.add(new SensitiveFilter());
-
-        for(Filter f:filters){
-            f.doFilter(msg);
-        }
+        FilterChain fc = new FilterChain();
+        fc.add(new HTMLFilter());
+        fc.add(new SensitiveFilter());
+        fc.doFilter(msg);
 
         System.out.println(msg);
         //Msg{msg='大家好:)，[script],欢迎访问 mashibing.com，大家都是955'}
@@ -60,5 +57,19 @@ class SensitiveFilter implements Filter{
         String r = m.getMsg();
         r = r.replaceAll("996","955");
         m.setMsg(r);
+    }
+}
+
+class FilterChain {
+    List<Filter> filters = new ArrayList<>();
+
+    public void add(Filter f) {
+        filters.add(f);
+    }
+
+    public void doFilter(Msg m) {
+        for(Filter f:filters){
+            f.doFilter(m);
+        }
     }
 }
