@@ -14,8 +14,8 @@ public class Main {
         FilterChain fc2 = new FilterChain();
         fc2.add(new FaceFilter()).add(new URLFilter());
 
+        fc.add(fc2);
         fc.doFilter(msg);
-        fc2.doFilter(msg);
 
         System.out.println(msg);
         //Msg{msg='大家好^V^，[script],欢迎访问 http://www.mashibing.com，大家都是955'}
@@ -82,7 +82,7 @@ class URLFilter implements Filter{
     }
 }
 
-class FilterChain {
+class FilterChain implements Filter{
     List<Filter> filters = new ArrayList<>();
 
     public FilterChain add(Filter f) {
