@@ -9,12 +9,16 @@ public class Main {
         msg.setMsg("大家好:)，<script>,欢迎访问 mashibing.com，大家都是996");
 
         FilterChain fc = new FilterChain();
-        fc.add(new HTMLFilter());
-        fc.add(new SensitiveFilter());
+        fc.add(new HTMLFilter()).add(new SensitiveFilter());
+
+        FilterChain fc2 = new FilterChain();
+        fc2.add(new FaceFilter()).add(new URLFilter());
+
         fc.doFilter(msg);
+        fc2.doFilter(msg);
 
         System.out.println(msg);
-        //Msg{msg='大家好:)，[script],欢迎访问 mashibing.com，大家都是955'}
+        //Msg{msg='大家好^V^，[script],欢迎访问 http://www.mashibing.com，大家都是955'}
     }
 }
 
@@ -60,11 +64,30 @@ class SensitiveFilter implements Filter{
     }
 }
 
+class FaceFilter implements Filter{
+    @Override
+    public void doFilter(Msg m) {
+        String r = m.getMsg();
+        r = r.replace(":)","^V^");
+        m.setMsg(r);
+    }
+}
+
+class URLFilter implements Filter{
+    @Override
+    public void doFilter(Msg m) {
+        String r = m.getMsg();
+        r = r.replaceAll("mashibing.com","http://www.mashibing.com");
+        m.setMsg(r);
+    }
+}
+
 class FilterChain {
     List<Filter> filters = new ArrayList<>();
 
-    public void add(Filter f) {
+    public FilterChain add(Filter f) {
         filters.add(f);
+        return this;
     }
 
     public void doFilter(Msg m) {
