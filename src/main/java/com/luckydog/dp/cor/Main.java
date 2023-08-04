@@ -1,12 +1,20 @@
 package com.luckydog.dp.cor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
         Msg msg = new Msg();
         msg.setMsg("大家好:)，<script>,欢迎访问 mashibing.com，大家都是996");
 
-        new HTMLFilter().doFilter(msg);
-        new SensitiveFilter().doFilter(msg);
+        List<Filter> filters = new ArrayList<>();
+        filters.add(new HTMLFilter());
+        filters.add(new SensitiveFilter());
+
+        for(Filter f:filters){
+            f.doFilter(msg);
+        }
 
         System.out.println(msg);
         //Msg{msg='大家好:)，[script],欢迎访问 mashibing.com，大家都是955'}
@@ -32,7 +40,6 @@ class Msg {
     }
 }
 
-//定义接口，让其他的filter的相关具体处理来实现这个接口的doFilter方法即可
 interface Filter {
     void doFilter(Msg m);
 }
