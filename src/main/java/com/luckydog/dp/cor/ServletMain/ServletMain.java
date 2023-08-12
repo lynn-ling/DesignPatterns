@@ -12,16 +12,13 @@ public class ServletMain {
 
         FilterChain chain = new FilterChain();
         chain.add(new HTMLFilter()).add(new SensitiveFilter());
-        chain.doFilter(request,response);
+        chain.doFilter(request,response,chain);
         System.out.println(request.str);
         System.out.println(response.str);
         /*
         结果为；
-        大家好:)，[script]，欢迎访问 mashibing.com，大家都是955
-        response--HTMLFilter()--SensitiveFilter()
-
-        可见处理Request的时候，是按照HTMLFilter() -→ SensitiveFilter()的过滤舒徐，
-        但无发实现处理Response的时候，按照SensitiveFilter() -→ HTMLFilter()的方向进行过滤的功能
+        大家好:)，[script]，欢迎访问 mashibing.com，大家都是955--HTMLFilter()--SensitiveFilter()
+        response--SensitiveFilter()--HTMLFilter()
          */
     }
 }
@@ -30,21 +27,37 @@ public class ServletMain {
 
 class Request {
     String str;
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "str='" + str + '\'' +
+                '}';
+    }
 }
 
 class Response {
     String str;
+
+    @Override
+    public String toString() {
+        return "Response{" +
+                "str='" + str + '\'' +
+                '}';
+    }
 }
 
 interface Filter {
-    boolean doFilter(Request request, Response response);
+    boolean doFilter(Request request, Response response,FilterChain chain);
+
 }
 
 
 class HTMLFilter implements Filter{
     @Override
-    public boolean doFilter(Request request, Response response) {
-        request.str = request.str.replaceAll("<","[").replaceAll(">","]");
+    public boolean doFilter(Request request, Response response,FilterChain chain) {
+        request.str = request.str.replaceAll("<","[").replaceAll(">","]") +  "--HTMLFilter()";
+        chain.doFilter(request,response,chain);
         response.str += "--HTMLFilter()";
         return true;
     }
@@ -53,8 +66,9 @@ class HTMLFilter implements Filter{
 
 class SensitiveFilter implements Filter{
     @Override
-    public boolean doFilter(Request request, Response response) {
-        request.str = request.str.replaceAll("996","955");
+    public boolean doFilter(Request request, Response response,FilterChain chain) {
+        request.str = request.str.replaceAll("996","955") + "--SensitiveFilter()";
+        chain.doFilter(request,response,chain);
         response.str += "--SensitiveFilter()";
         return true;
     }
@@ -64,16 +78,20 @@ class SensitiveFilter implements Filter{
 
 class FilterChain implements Filter{
     List<Filter> filters = new ArrayList<>();
+    int index = 0;
+
 
     public FilterChain add(Filter f) {
         filters.add(f);
         return this;
     }
 
-    public boolean doFilter(Request request, Response response) {
-        for(Filter f:filters){
-            f.doFilter(request,response);
+    public boolean doFilter(Request request, Response response, FilterChain chain) {
+        if(index == filters.size()) return false;
+        else{
+            Filter f = filters.get(index);
+            index ++;
+            return f.doFilter(request,response,chain);
         }
-        return true;
     }
 }
